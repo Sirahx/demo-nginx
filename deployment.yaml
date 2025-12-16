@@ -17,12 +17,3 @@ spec:
           image: nginx:1.27
           ports:
             - containerPort: 80
-affinity:
-  podAntiAffinity:
-    preferredDuringSchedulingIgnoredDuringExecution:
-      - podAffinityTerm:
-          labelSelector:
-            matchLabels:
-              app: demo-nginx
-          topologyKey: kubernetes.io/hostname
-        weight: 100
