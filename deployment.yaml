@@ -17,3 +17,21 @@ spec:
           image: nginx:1.27
           ports:
             - containerPort: 80
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 1
+            timeoutSeconds: 1
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 3
+            failureThreshold: 1
+            timeoutSeconds: 1
+
