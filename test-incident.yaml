@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-incident-notifications
+  labels:
+    app: test-error
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-error
+  template:
+    metadata:
+      labels:
+        app: test-error
+    spec:
+      containers:
+      - name: nginx-error
+        # Cette image n'existe pas, elle va générer une erreur de santé (Degraded)
+        image: nginx:ceci-est-une-erreur-volontaire
+        ports:
+        - containerPort: 80
