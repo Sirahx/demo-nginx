@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: leaky-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.14.2  # Image très vieille remplie de failles (CVE)
+      securityContext:
+        privileged: true   # TRÈS GRAVE : Donne les droits root du serveur au container
+        runAsUser: 0       # Lance le container en tant que root
+      env:
+        - name: AWS_SECRET_KEY
+          value: "AKIAIOSFODNN7EXAMPLE" # SECRET EXPOSÉ : Trivy va détecter cette fausse clé
+      resources: {}        # PAS DE LIMITES : Risque de faire crash le node (DoS)
