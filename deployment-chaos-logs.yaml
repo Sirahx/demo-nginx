@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-emulator
+  namespace: monitoring
+  labels:
+    app: log-emulator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-emulator
+  template:
+    metadata:
+      labels:
+        app: log-emulator
+    spec:
+      containers:
+      - name: log-gen
+        image: busybox
+        args:
+        - /bin/sh
+        - -c
+        - >
+          while true; do
+            DATE=$(date '+%Y-%m-%d %H:%M:%S');
+            LEVEL=$(shuf -e INFO WARN ERROR -n 1);
+            case $LEVEL in
+              "ERROR") MSG="Connection refused by database - Retrying in 5s";;
+              "WARN")  MSG="Slow response from upstream API - latency=450ms";;
+              "INFO")  MSG="User session validated for user_id=4029";;
+            esac;
+            echo "$DATE [$LEVEL] $MSG";
+            sleep 5;
+          done
