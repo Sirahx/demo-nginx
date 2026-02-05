@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unstable-app
+  namespace: monitoring
+  labels:
+    app: unstable-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unstable-app
+  template:
+    metadata:
+      labels:
+        app: unstable-app
+    spec:
+      containers:
+      - name: app
+        image: busybox
+        resources:
+          limits:
+            memory: "32Mi"
+            cpu: "50m"
+        command: ["/bin/sh", "-c"]
+        args:
+        - >
+          echo "$(date) [INFO] Application started successfully.";
+          sleep 30;
+          echo "$(date) [WARN] High memory usage detected - threshold 85%.";
+          sleep 300;
+          echo "$(date) [ERROR] Critical error: Database connection lost.";
+          sleep 240;
+          echo "$(date) [FATAL] Internal Server Error (SIGSEGV). Crashing now...";
+          exit 1;
